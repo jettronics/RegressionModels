@@ -22,10 +22,6 @@ y = R(:,1)' * 0.011; %price: indian rupie to euro
 %x2 = (0.2:0.1:2.1);
 %y = zeros(1,size(x1));
 
-r = R;
-r(:,1) = R(:,1) * 0.011;
-r(:,2) = R(:,2) * 0.092903;
-
 mean = zeros(1,V);
 mean_s = zeros(1,V);
 %Scaling needed for every feature vector befor merged into x
