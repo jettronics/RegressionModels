@@ -18,12 +18,10 @@ x(10,:) = R(:,11)'; %parking: number of parking lots
 x(11,:) = R(:,12)'; %prefarea: house located in preferred area: no: 0, yes: 1
 x(12,:) = R(:,13)'; %furnishingstatus: furnished: 2, semi-furnished: 1, unfurnished: 0
 y = R(:,1)' * 0.011; %price: indian rupie to euro
-%x1 = (0.5:0.25:5.25);
-%x2 = (0.2:0.1:2.1);
-%y = zeros(1,size(x1));
 
 mean = zeros(1,V);
 mean_s = zeros(1,V);
+
 %Scaling needed for every feature vector befor merged into x
 %Mean value = 0, standard deviation = 1
 for i=1:V
@@ -34,9 +32,9 @@ for i=1:V
    dev_s(i) = sqrt(sum((x_s(i,:)-mean_s(i)).^2)/L);
 end
 
-%theta
-h = zeros(V+1,1);
+%lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; -0.002; 0.0; 0.0;];
 
+h = zeros(V+1,1);
 X = zeros(L,V+1);
 
 for i=1:L
@@ -55,14 +53,12 @@ for i=1:L
    X(i,13) = x_s(12,i);
 end
 
-beta = 0.0002;
-%lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; -0.002; 0.0; 0.0;];
-lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0;];
-%lambda = [0.0; 0.0; 0.0;];
-
-% Bayes estimation
 it = 200;
+beta = 0.0002;
 h_trend = zeros(V+1,it);
+
+lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0;];
+
 for i=1:it
   h = h - beta * ((X' * X * h) - (X' * y') + (lambda * h' * h ));
   h_trend(:,i) = h;
