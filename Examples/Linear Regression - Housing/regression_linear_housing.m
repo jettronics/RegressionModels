@@ -21,22 +21,23 @@ y = R(:,1)' * 0.011; %price: indian rupie to euro
 
 mean = zeros(1,V);
 mean_s = zeros(1,V);
+x_s = zeros(V+1,L);
 
-%Scaling needed for every feature vector befor merged into x
+%Scaling needed for every feature vector
 %Mean value = 0, standard deviation = 1
 for i=1:V
    mean(i) = sum(x(i,:)/L);
    dev(i) = sqrt(sum((x(i,:)-mean(i)).^2)/L);
-   x_s(i,:) = (x(i,:) - mean(i)) / dev(i);
-   mean_s(i) = sum(x_s(i,:)/L);
-   dev_s(i) = sqrt(sum((x_s(i,:)-mean_s(i)).^2)/L);
+   x_s(i+1,:) = (x(i,:) - mean(i)) / dev(i);
+   mean_s(i) = sum(x_s(i+1,:)/L);
+   dev_s(i) = sqrt(sum((x_s(i+1,:)-mean_s(i)).^2)/L);
 end
 
-%lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; -0.002; 0.0; 0.0;];
-
 h = zeros(V+1,1);
+h_b = zeros(V+1,1);
 X = zeros(L,V+1);
 
+%{   
 for i=1:L
    X(i,1) = 1;
    X(i,2) = x_s(1,i);
@@ -52,20 +53,42 @@ for i=1:L
    X(i,12) = x_s(11,i);
    X(i,13) = x_s(12,i);
 end
+%}
 
 it = 200;
 beta = 0.0002;
+
+x_s(1,:) = 1;
+X = x_s';
+
+% Bayesian Regression activated
+lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; -0.002; 0.0; 0.0;];
+
+for i=1:it
+  h = h - beta * ((X' * X * h) - (X' * y') + (lambda * h' * h ));
+end
+
+% Bayesian Regression activated
+lambda_b = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; -0.002; 0.0; 0.0;];
+
+for i=1:it
+  h_b = h_b - beta * ((X' * X * h_b) - (X' * y') + (lambda_b * h_b' * h_b ));
+end
+
+
 h_trend = zeros(V+1,it);
-
-lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0;];
-
+%{
 for i=1:it
   h = h - beta * ((X' * X * h) - (X' * y') + (lambda * h' * h ));
   h_trend(:,i) = h;
 end
+%}
 
-% Regression result
+% Default Regression result
 Y_r = X * h;
+
+% Bayesian Regression result
+Y_rb = X * h_b;
 
 
 p = zeros(1,V);
@@ -78,7 +101,7 @@ p(6) = 2; %guestroom: no: 0, yes: 1
 p(7) = 1; %basement: no: 0, yes: 1
 p(8) = 1; %hotwaterheating: house uses gas: no: 0, yes: 1
 p(9) = 0; %airconditioning: no: 0, yes: 1
-p(10) = 4; %parking: number of parking lots
+p(10) = 3; %parking: number of parking lots
 p(11) = 0; %prefarea: house located in preferred area: no: 0, yes: 1
 p(12) = 1; %furnishingstatus: furnished: 2, semi-furnished: 1, unfurnished: 0
 
@@ -87,7 +110,9 @@ for i=2:V+1
    p_s(i) = (p(i-1) - mean(i-1)) / dev(i-1);
 end
 
+% Regression sample result
 Y_p = p_s * h;
+
 %Y_p = min(Y_p,1);
 
 
@@ -117,13 +142,29 @@ ylim([0 8000])
 xlabel('Iterations')
 legend('Area in qm', 'Number of bedrooms','Number of bathrooms','Number of stories')
 
+set(gca,'xtick',[])
+
 figure(3)
 clf
-subplot(2,1,1)
-plot(x(10,:),y,'ok')
+subplot(3,1,1)
+plot(x_s(11,:),y,'ok')
 hold on
 grid on
-subplot(2,1,2)
+axis("tick[y]");
+ylim([0 170000])
+title('Parking lots impact on Price - Original')
+subplot(3,1,2)
 plot(X(:,11),Y_r,'ok')
 hold on
 grid on
+axis("tick[y]");
+ylim([0 170000])
+title('Parking lots impact on Price - Default Regression')
+subplot(3,1,3)
+plot(X(:,11),Y_rb,'ok')
+hold on
+grid on
+axis("tick[y]");
+ylim([0 170000])
+title('Parking lots impact on Price - Bayesian Regression')
+
