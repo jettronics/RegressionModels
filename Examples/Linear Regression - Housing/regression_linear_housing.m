@@ -92,18 +92,18 @@ Y_rb = X * h_b;
 
 
 p = zeros(1,V);
-p(1) = 300; %area: qm
+p(1) = 900; %area: qm
 p(2) = 2; %bedrooms
 p(3) = 2; %bathrooms
-p(4) = 2; %stories: number of levels
+p(4) = 1; %stories: number of levels
 p(5) = 0; %main road: house faces main road
-p(6) = 2; %guestroom: no: 0, yes: 1
-p(7) = 1; %basement: no: 0, yes: 1
-p(8) = 1; %hotwaterheating: house uses gas: no: 0, yes: 1
-p(9) = 0; %airconditioning: no: 0, yes: 1
-p(10) = 3; %parking: number of parking lots
-p(11) = 0; %prefarea: house located in preferred area: no: 0, yes: 1
-p(12) = 1; %furnishingstatus: furnished: 2, semi-furnished: 1, unfurnished: 0
+p(6) = 1; %guestroom: no: 0, yes: 1
+p(7) = 0; %basement: no: 0, yes: 1
+p(8) = 0; %hotwaterheating: house uses gas: no: 0, yes: 1
+p(9) = 1; %airconditioning: no: 0, yes: 1
+p(10) = 2; %parking: number of parking lots
+p(11) = 1; %prefarea: house located in preferred area: no: 0, yes: 1
+p(12) = 2; %furnishingstatus: furnished: 2, semi-furnished: 1, unfurnished: 0
 
 p_s(1) = 1;
 for i=2:V+1
