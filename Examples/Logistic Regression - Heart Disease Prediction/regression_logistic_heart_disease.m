@@ -41,31 +41,13 @@ h = zeros(V+1,1);
 h_b = zeros(V+1,1);
 X = zeros(L,V+1);
 
-%{   
-for i=1:L
-   X(i,1) = 1;
-   X(i,2) = x_s(1,i);
-   X(i,3) = x_s(2,i);
-   X(i,4) = x_s(3,i);
-   X(i,5) = x_s(4,i);
-   X(i,6) = x_s(5,i);
-   X(i,7) = x_s(6,i);
-   X(i,8) = x_s(7,i);
-   X(i,9) = x_s(8,i);
-   X(i,10) = x_s(9,i);
-   X(i,11) = x_s(10,i);
-   X(i,12) = x_s(11,i);
-   X(i,13) = x_s(12,i);
-end
-%}
-
 it = 300;
 beta = 0.0002;
 
 x_s(1,:) = 1;
 X = x_s';
 
-% Bayesian Regression activated
+% Bayesian Regression deactivated
 lambda = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0; 0.0;];
 
 h_trend = zeros(V+1,it);
@@ -91,22 +73,22 @@ Y_rb = 1 ./ (1 + exp(-(X * h_b)));
 
 
 p = zeros(1,V);
-p(1) = 0; %male: 1, female: 0
-p(2) = 65; %age
-p(3) = 4; %education: 1…no graduation, 2...secondary school certificate, 
+p(1) = 1; %male: 1, female: 0
+p(2) = 55; %age
+p(3) = 2; %education: 1…no graduation, 2...secondary school certificate, 
                             % 3…secondary school diploma, 4…high school
 p(4) = 1; %current smoker
-p(5) = 10; %cigarettes per day
+p(5) = 15; %cigarettes per day
 p(6) = 1; %blood presure medication 
-p(7) = 1; %prevalent stroke 
+p(7) = 0; %prevalent stroke 
 p(8) = 1; %prevalent hypertensive
 p(9) = 1; %diabetes
-p(10) = 200; %total cholesterol: >240…Dangerous, 200…239 At risk, <200 Heart healthy
-p(11) = 170; %systolic blood pressure
-p(12) = 110; %diastolic blood pressure
-p(13) = 70; %BMI
-p(14) = 90; %heart rate
-p(15) = 150; %glucose level: >110 pathological, 60…109 normal
+p(10) = 220; %total cholesterol: >240…Dangerous, 200…239 At risk, <200 Heart healthy
+p(11) = 140; %systolic blood pressure
+p(12) = 85; %diastolic blood pressure
+p(13) = 26; %BMI
+p(14) = 75; %heart rate
+p(15) = 80; %glucose level: >110 pathological, 60…109 normal
 
 p_s(1) = 1;
 for i=2:V+1
@@ -128,6 +110,7 @@ for i = 2 : V+1
 endfor
 grid on
 xlim([0 16])
+title("Model Parameter")
 labels = ['Male'; 'Age'; 'Education'; 'Smoker'; 'Cigarettes'; 'BP Med.'; 'Stroke'; 'Hypertensive'; 'Diabetes'; 'Tot. Chol.'; 'Sys. BP'; 'Dia. BP'; 'BMI'; 'HR'; 'Glucose'];
 set(gca, 'xtick', z, 'xticklabel', labels); 
 
