@@ -26,5 +26,5 @@ plt.plot(xm, ym, 'bo')
 plt.text(-6.5, ym, 'likelihood', color = 'blue')
 plt.annotate('probability', color='green', xy=(0,0.03), xytext=(3.5,0.01), arrowprops=dict(color='green', arrowstyle="-"))
 
-plt.savefig('C:\GitHub\RegressionModels\Images\Likelihood_Probability.jpg', format='jpg', dpi=200)
+#plt.savefig('C:\GitHub\RegressionModels\Images\Likelihood_Probability.jpg', format='jpg', dpi=200)
 plt.show()
